@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/mainFragment">
+
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="ru.netology.nework.activity.MainFragment"
+        android:label="@string/nework"
+        tools:layout="@layout/fragment_main" >
+        <action
+            android:id="@+id/action_mainFragment_to_authorFragment2"
+            app:destination="@id/authorFragment2" />
+        <action
+            android:id="@+id/action_mainFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_registerFragment"
+            app:destination="@id/registerFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_logoutFragment"
+            app:destination="@id/logoutFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_newPostFragment"
+            app:destination="@id/newPostFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_imageFragment3"
+            app:destination="@id/imageFragment3" />
+        <action
+            android:id="@+id/action_mainFragment_to_newEventFragment"
+            app:destination="@id/newEventFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_imageFragment32"
+            app:destination="@id/imageFragment3" />
+    </fragment>
+    <fragment
+        android:id="@+id/authorFragment2"
+        android:name="ru.netology.nework.activity.users.AuthorFragment"
+        android:label="@string/user"
+        tools:layout="@layout/fragment_author" >
+        <action
+            android:id="@+id/action_authorFragment2_to_logoutFragment"
+            app:destination="@id/logoutFragment" />
+        <action
+            android:id="@+id/action_authorFragment2_to_mainFragment"
+            app:destination="@id/mainFragment" />
+        <action
+            android:id="@+id/action_authorFragment2_to_imageFragment3"
+            app:destination="@id/imageFragment3" />
+        <action
+            android:id="@+id/action_authorFragment2_to_newEventFragment"
+            app:destination="@id/newEventFragment" />
+        <action
+            android:id="@+id/action_authorFragment2_to_newJobFragment"
+            app:destination="@id/newJobFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="ru.netology.nework.activity.auth.LoginFragment"
+        android:label="@string/login"
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_loginFragment_to_logoutFragment"
+            app:destination="@id/logoutFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="ru.netology.nework.activity.auth.RegisterFragment"
+        android:label="@string/registration"
+        tools:layout="@layout/fragment_register" >
+        <action
+            android:id="@+id/action_registerFragment_to_logoutFragment"
+            app:destination="@id/logoutFragment" />
+        <action
+            android:id="@+id/action_registerFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
+    </fragment>
+    <dialog
+        android:id="@+id/logoutFragment"
+        android:name="ru.netology.nework.activity.auth.LogoutFragment"
+        android:label="@string/logout"
+        tools:layout="@layout/fragment_logout" >
+        <action
+            android:id="@+id/action_logoutFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
+    </dialog>
+    <fragment
+        android:id="@+id/newPostFragment"
+        android:name="ru.netology.nework.activity.post.NewPostFragment"
+        android:label="@string/addPost"
+        tools:layout="@layout/fragment_new_post" >
+        <action
+            android:id="@+id/action_newPostFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/imageFragment3"
+        android:name="ru.netology.nework.activity.ImageFragment"
+        android:label="@string/image"
+        tools:layout="@layout/fragment_image" >
+        <action
+            android:id="@+id/action_imageFragment3_to_mainFragment"
+            app:destination="@id/mainFragment" />
+        <action
+            android:id="@+id/action_imageFragment3_to_mainFragment2"
+            app:destination="@id/mainFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/newEventFragment"
+        android:name="ru.netology.nework.activity.event.NewEventFragment"
+        android:label="@string/add_event"
+        tools:layout="@layout/fragment_new_event" >
+        <action
+            android:id="@+id/action_newEventFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/newJobFragment"
+        android:name="ru.netology.nework.activity.job.NewJobFragment"
+        android:label="@string/job"
+        tools:layout="@layout/fragment_new_job" >
+        <action
+            android:id="@+id/action_newJobFragment_to_authorFragment2"
+            app:destination="@id/authorFragment2" />
+    </fragment>
+</navigation>
