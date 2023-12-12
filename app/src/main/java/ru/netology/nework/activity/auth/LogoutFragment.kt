@@ -17,17 +17,16 @@ import ru.netology.nework.databinding.FragmentLogoutBinding
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class LogoutFragment() : DialogFragment() {
+class LogoutFragment : DialogFragment() {
 
     @Inject
     lateinit var appAuth: AppAuth
-    lateinit var binding: FragmentLogoutBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentLogoutBinding.inflate(inflater, container, false)
+        val binding = FragmentLogoutBinding.inflate(inflater, container, false)
 
         arguments?.textArg?.let {
             when (it) {

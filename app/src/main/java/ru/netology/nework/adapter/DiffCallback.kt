@@ -3,7 +3,7 @@ package ru.netology.nework.adapter
 import android.annotation.SuppressLint
 import androidx.recyclerview.widget.DiffUtil
 
-class Callback<T>: DiffUtil.ItemCallback<T>() {
+class Callback<T: Any>: DiffUtil.ItemCallback<T>() {
     override fun areItemsTheSame(oldItem: T, newItem: T): Boolean {
         return oldItem == newItem
     }

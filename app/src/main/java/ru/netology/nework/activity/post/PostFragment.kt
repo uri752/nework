@@ -1,13 +1,12 @@
 package ru.netology.nework.activity.post
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import android.widget.SeekBar
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
@@ -29,30 +28,29 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
-class PostFragment() : Fragment() {
-    @Inject lateinit var appAuth: AppAuth
-    lateinit var binding: FragmentPostBinding
-    lateinit var adapter: PostAdapter
-    private val viewModelPost: PostViewModel by activityViewModels()
-    private val authViewModel: AuthViewModel by activityViewModels()
-    private val viewModelJob: JobViewModel by activityViewModels()
-    private val userViewModel: UserViewModel by activityViewModels()
-    private val wallViewModel: WallViewModel by activityViewModels()
+class PostFragment : Fragment() {
+
+    @Inject
+    lateinit var appAuth: AppAuth
+
+    private val viewModelPost: PostViewModel by viewModels()
+    private val authViewModel: AuthViewModel by viewModels()
+    private val viewModelJob: JobViewModel by viewModels()
+    private val userViewModel: UserViewModel by viewModels()
+    private val wallViewModel: WallViewModel by viewModels()
 
     companion object {
-        val SIGN_IN = "SIGN_IN"
-        val SIGN_OUT = "SIGN_OUT"
+        const val SIGN_IN = "SIGN_IN"
+        const val SIGN_OUT = "SIGN_OUT"
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentPostBinding.inflate(inflater)
-    //    lifecycle.addObserver(MainFragment.observer)
-        adapter = PostAdapter(object : OnClick<Post> {
-            override fun onClik(post: Post) {
+        val binding = FragmentPostBinding.inflate(inflater)
+        val adapter = PostAdapter(object : OnClick<Post> {
+            override fun onClick(post: Post) {
                 if (!authViewModel.authorized) {
                     findNavController().navigate(R.id.logoutFragment,
                         Bundle().apply {
@@ -188,12 +186,10 @@ class PostFragment() : Fragment() {
             }
 
             binding.swiperefresh.isRefreshing = state.refreshing
-
         }
 
         authViewModel.state.observe(viewLifecycleOwner) {
             binding.addPost.isVisible = authViewModel.authorized
-            adapter.notifyDataSetChanged()
         }
 
         lifecycleScope.launchWhenCreated {

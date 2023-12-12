@@ -9,7 +9,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.net.toFile
 import androidx.core.view.isVisible
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.material.snackbar.Snackbar
@@ -22,16 +22,15 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import ru.netology.nework.dto.TypeAttachment
 
 @AndroidEntryPoint
-class RegisterFragment() : Fragment() {
+class RegisterFragment : Fragment() {
 
-    val authViewModel: AuthViewModel by activityViewModels()
+    private val authViewModel: AuthViewModel by viewModels()
 
-    lateinit var binding: FragmentRegisterBinding
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentRegisterBinding.inflate(inflater, container, false)
+        val binding = FragmentRegisterBinding.inflate(inflater, container, false)
 
         val photoLauncher =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -92,12 +91,12 @@ class RegisterFragment() : Fragment() {
             if (!login.isNullOrBlank() || !name.isNullOrBlank()) {
                 val password = binding.passRegistr.text.toString()
                 val passCheck = binding.passCheckRegistr.text.toString()
-                if (password.equals(passCheck)) {
+                if (password == passCheck) {
                     AndroidUtils.hideKeyboard(requireView())
                     with(binding) {
                         registrButton.let { button ->
                             button.isClickable = false
-                            button.text = "Wait_authorization"
+                            button.text = getString(R.string.wait_authorization)
                         }
                         loading.isVisible = true
                         loginRegistr.isEnabled = false
@@ -107,17 +106,17 @@ class RegisterFragment() : Fragment() {
 
                     authViewModel.registration(login, password, name)
                 } else {
-                    Toast.makeText(context, R.string.Password_not_correct, Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, R.string.password_not_correct, Toast.LENGTH_LONG).show()
                 }
             } else {
-                Toast.makeText(context, R.string.Login_Name_is_not_empty, Toast.LENGTH_LONG).show()
+                Toast.makeText(context, R.string.login_or_name_is_empty, Toast.LENGTH_LONG).show()
 
             }
         }
         authViewModel.state.observe(viewLifecycleOwner) { state ->
             if (state.errorCode) {
                 binding.loading.isVisible = false
-                Toast.makeText(context, R.string.Login_not_found, Toast.LENGTH_LONG).show()
+                Toast.makeText(context, R.string.login_not_found, Toast.LENGTH_LONG).show()
                 binding.loginRegistr.isEnabled = true
                 binding.passRegistr.isEnabled = true
                 binding.passCheckRegistr.isEnabled = true

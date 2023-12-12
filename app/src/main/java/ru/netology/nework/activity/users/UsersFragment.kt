@@ -6,12 +6,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collectLatest
 import ru.netology.nework.R
 import ru.netology.nework.activity.MainFragment.Companion.textArg
 import ru.netology.nework.activity.post.PostFragment
@@ -23,20 +26,18 @@ import ru.netology.nework.viewmodel.*
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @AndroidEntryPoint
-class UsersFragment() : Fragment() {
-    private lateinit var binding: FragmentUsersBinding
-    private lateinit var adapter: UserAdapter
-    private val userViewModel: UserViewModel by activityViewModels()
-    private val wallViewModel: WallViewModel by activityViewModels()
-    private val viewModelJob: JobViewModel by activityViewModels()
-    private val authViewModel: AuthViewModel by activityViewModels()
+class UsersFragment : Fragment() {
+    private val userViewModel: UserViewModel by viewModels()
+    private val wallViewModel: WallViewModel by viewModels()
+    private val viewModelJob: JobViewModel by viewModels()
+    private val authViewModel: AuthViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentUsersBinding.inflate(inflater)
-        adapter = UserAdapter(object : OnUserClick {
+        val binding = FragmentUsersBinding.inflate(inflater)
+        val adapter = UserAdapter(object : OnUserClick {
             override fun onClick(user: User) {
                 if (!authViewModel.authorized) {
                     findNavController().navigate(R.id.logoutFragment,
@@ -64,6 +65,8 @@ class UsersFragment() : Fragment() {
 
         userViewModel.state.observe(viewLifecycleOwner) { state ->
             binding.progress.isVisible = state.loading
+
+            binding.swiperefresh.isRefreshing = state.loading
 
             if (state.loadError) {
                 Snackbar.make(binding.root, R.string.error, Snackbar.LENGTH_LONG)

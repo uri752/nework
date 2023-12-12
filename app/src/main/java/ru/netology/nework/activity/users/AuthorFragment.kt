@@ -6,7 +6,7 @@ import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.tabs.TabLayoutMediator
@@ -22,11 +22,11 @@ import ru.netology.nework.viewmodel.WallViewModel
 
 @AndroidEntryPoint
 @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
-class AuthorFragment(): Fragment(), MenuProvider {
+class AuthorFragment : Fragment(), MenuProvider {
 
-    lateinit var binding: FragmentAuthorBinding
-    private val userViewModel: UserViewModel by activityViewModels()
-    private val wallViewModel: WallViewModel by activityViewModels()
+    private var binding: FragmentAuthorBinding? = null
+    private val userViewModel: UserViewModel by viewModels()
+    private val wallViewModel: WallViewModel by viewModels()
 
 
     private val fragmentList = listOf(
@@ -44,7 +44,7 @@ class AuthorFragment(): Fragment(), MenuProvider {
     ): View {
         binding = FragmentAuthorBinding.inflate(inflater, container, false)
 
-        return binding.root
+        return binding?.root!!
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -54,23 +54,32 @@ class AuthorFragment(): Fragment(), MenuProvider {
 
         init()
         userViewModel.user.observe(viewLifecycleOwner) { user ->
-            binding.authorUser.text = user.name
+            binding?.authorUser?.text = user.name
             if (user.avatar != null) {
                 val url = user.avatar
-                binding.userAvatar.loadAvatar(url)
+                binding?.userAvatar?.loadAvatar(url)
             } else {
-                binding.userAvatar.setImageResource(R.drawable.ic_error_100)
+                binding?.userAvatar?.setImageResource(R.drawable.ic_error_100)
             }
         }
 
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        binding = null
+    }
+
     private fun init() {
         val adapter = ViewPagerAdapter(activity as FragmentActivity, fragmentList)
-        binding.vp.adapter = adapter
-        TabLayoutMediator(binding.tabLayout, binding.vp) { tab, pos ->
-            tab.text = tabList[pos]
-        }.attach()
+        binding?.vp?.adapter = adapter
+        val tabLayout = binding?.tabLayout
+        val vp =binding?.vp
+        if (tabLayout != null && vp != null) {
+            TabLayoutMediator(tabLayout, vp) { tab, pos ->
+                tab.text = tabList[pos]
+            }.attach()
+        }
     }
 
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {

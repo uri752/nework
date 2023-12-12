@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
@@ -24,12 +24,10 @@ import ru.netology.nework.viewmodel.UserViewModel
 
 @AndroidEntryPoint
 @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
-class JobFragment() : Fragment() {
-    lateinit var binding: FragmentJobBinding
-    lateinit var adapter: JobAdapter
-    private val viewModelJob: JobViewModel by activityViewModels()
-    private val viewModelAuth: AuthViewModel by activityViewModels()
-    private val userViewModel: UserViewModel by activityViewModels()
+class JobFragment : Fragment() {
+    private val viewModelJob: JobViewModel by viewModels()
+    private val viewModelAuth: AuthViewModel by viewModels()
+    private val userViewModel: UserViewModel by viewModels()
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun onCreateView(
@@ -37,9 +35,9 @@ class JobFragment() : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        binding = FragmentJobBinding.inflate(inflater)
+        val binding = FragmentJobBinding.inflate(inflater)
 
-        adapter = JobAdapter(AppAuth(requireContext()), userViewModel, object : OnClickMenu {
+        val adapter = JobAdapter(AppAuth(requireContext()), userViewModel, object : OnClickMenu {
             override fun onClick(job: Job) {
                 viewModelJob.removeMyJobById(job.id)
             }

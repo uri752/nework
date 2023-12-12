@@ -38,9 +38,9 @@ class MediaLifecycleObserver : LifecycleEventObserver {
     }
 
     fun isPaused(): Boolean {
-         if (mediaPlayer != null)
-           return (!mediaPlayer?.isPlaying!! && mediaPlayer?.currentPosition!! > 0)
-        else return false
+        return if (mediaPlayer != null)
+            (!mediaPlayer?.isPlaying!! && mediaPlayer?.currentPosition!! > 0)
+        else false
     }
 
     override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
@@ -60,19 +60,18 @@ class MediaLifecycleObserver : LifecycleEventObserver {
                 source.lifecycle.removeObserver(this)
             }
             else -> {
-                Unit
             }
         }
     }
 
-    suspend fun getCurrentPosition(duration: Int, pos: Int): Flow<Int> = flow {
+    private suspend fun getCurrentPosition(duration: Int, pos: Int): Flow<Int> = flow {
         while (pos < duration) {
             delay(1_000L)
             emit(mediaPlayer!!.currentPosition)
         }
     }.flowOn(Dispatchers.Default)
 
-    suspend fun initSeekBar(seekBar: SeekBar) {
+    private suspend fun initSeekBar(seekBar: SeekBar) {
         seekBar.max = mediaPlayer!!.duration
         getCurrentPosition(seekBar.max, currentPos).collect {
             seekBar.progress = it

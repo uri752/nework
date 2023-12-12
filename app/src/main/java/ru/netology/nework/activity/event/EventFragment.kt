@@ -1,6 +1,5 @@
 package ru.netology.nework.activity.event
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -9,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
 import androidx.core.view.isVisible
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
@@ -31,26 +30,23 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
-class EventFragment() : Fragment() {
+class EventFragment : Fragment() {
 
     @Inject
     lateinit var appAuth: AppAuth
-    lateinit var binding: FragmentEventBinding
-    private lateinit var adapter: EventAdapter
-    private val viewModelEvent: EventViewModel by activityViewModels()
-    private val authViewModel: AuthViewModel by activityViewModels()
-    private val wallViewModel: WallViewModel by activityViewModels()
-    private val viewModelJob: JobViewModel by activityViewModels()
-    private val userViewModel: UserViewModel by activityViewModels()
+    private val viewModelEvent: EventViewModel by viewModels()
+    private val authViewModel: AuthViewModel by viewModels()
+    private val wallViewModel: WallViewModel by viewModels()
+    private val viewModelJob: JobViewModel by viewModels()
+    private val userViewModel: UserViewModel by viewModels()
 
-    @SuppressLint("NotifyDataSetChanged")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentEventBinding.inflate(inflater)
-        adapter = EventAdapter(object : OnClick<Event> {
-            override fun onClik(event: Event) {
+        val binding = FragmentEventBinding.inflate(inflater)
+        val adapter = EventAdapter(object : OnClick<Event> {
+            override fun onClick(event: Event) {
                 if (!authViewModel.authorized) {
                     findNavController().navigate(R.id.logoutFragment,
                         Bundle().apply {
@@ -199,8 +195,6 @@ class EventFragment() : Fragment() {
         lifecycleScope.launchWhenCreated {
             adapter.loadStateFlow.collectLatest {
                 binding.swiperefresh.isRefreshing = it.refresh is LoadState.Loading
-                //           || it.append is LoadState.Loading
-                //          || it.prepend is LoadState.Loading
             }
         }
 
@@ -210,7 +204,6 @@ class EventFragment() : Fragment() {
 
         authViewModel.state.observe(viewLifecycleOwner) {
             binding.addEvent.isVisible = authViewModel.authorized
-            adapter.notifyDataSetChanged()
         }
 
         binding.addEvent.setOnClickListener {

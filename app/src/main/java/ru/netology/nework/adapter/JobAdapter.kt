@@ -43,8 +43,8 @@ class JobViewHolder(
     private val userViewModel: UserViewModel,
     private val onClickMenu: OnClickMenu,
 ) : RecyclerView.ViewHolder(binding.root) {
-    var startJobTime: LocalDateTime = LocalDateTime.now()
-    var endJobTime: LocalDateTime = LocalDateTime.now()
+    private var startJobTime: LocalDateTime = LocalDateTime.now()
+    private var endJobTime: LocalDateTime = LocalDateTime.now()
     fun bind(job: Job) {
         binding.apply {
             val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy   HH:mm:ss")

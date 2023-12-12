@@ -124,7 +124,7 @@ class PostViewHolder(
             }
 
             authorAvatar.setOnClickListener {
-                onListener.onClik(post)
+                onListener.onClick(post)
             }
 
             like.setOnClickListener {

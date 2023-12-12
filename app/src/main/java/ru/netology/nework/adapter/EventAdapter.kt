@@ -137,7 +137,7 @@ class EventViewHolder(
             }
 
             avatar.setOnClickListener {
-                onListener.onClik(event)
+                onListener.onClick(event)
             }
 
             like.setOnClickListener {

@@ -4,21 +4,14 @@ import androidx.room.TypeConverter
 
 class ListConverter {
 
-    @TypeConverter
-    fun fromListLongToString(longList: List<Long>): String = longList.toString()
+    private companion object {
+        const val SEPARATOR = ","
+    }
 
     @TypeConverter
-    fun toListLongFromString(stringList: String): List<Long> {
-        val result = ArrayList<Long>()
-        val split = stringList.replace("[", "")
-            .replace("]", "")
-            .replace(" ", "")
-            .split(",")
-        for (n in split) {
-            try {
-                result.add(n.toLong())
-            } catch (e: Exception) {}
-        }
-     return result
-    }
+    fun fromListLongToString(longList: List<Long>): String = longList.joinToString(SEPARATOR)
+
+    @TypeConverter
+    fun toListLongFromString(stringList: String): List<Long> = stringList.split(SEPARATOR)
+        .mapNotNull { it.toLongOrNull() }
 }

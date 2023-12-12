@@ -6,7 +6,7 @@ import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.tabs.TabLayoutMediator
@@ -17,24 +17,26 @@ import ru.netology.nework.activity.post.PostFragment
 import ru.netology.nework.activity.users.UsersFragment
 import ru.netology.nework.adapter.ViewPagerAdapter
 import ru.netology.nework.databinding.FragmentMainBinding
+import ru.netology.nework.databinding.FragmentNewEventBinding
 import ru.netology.nework.utils.MediaLifecycleObserver
 import ru.netology.nework.utils.StringArgs
 import ru.netology.nework.viewmodel.*
 
 @AndroidEntryPoint
 @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
-class MainFragment() : Fragment(), MenuProvider {
+class MainFragment : Fragment(), MenuProvider {
     companion object {
         var Bundle.textArg by StringArgs
         val observer = MediaLifecycleObserver()
         var playId = -1L
     }
 
-    lateinit var binding: FragmentMainBinding
-    private val authViewModel: AuthViewModel by activityViewModels()
-    private val wallViewModel: WallViewModel by activityViewModels()
-    private val viewModelJob: JobViewModel by activityViewModels()
-    private val userViewModel: UserViewModel by activityViewModels()
+    private var binding: FragmentMainBinding? = null
+
+    private val authViewModel: AuthViewModel by viewModels()
+    private val wallViewModel: WallViewModel by viewModels()
+    private val viewModelJob: JobViewModel by viewModels()
+    private val userViewModel: UserViewModel by viewModels()
 
     private val fragmentList = listOf(
         PostFragment(),
@@ -59,8 +61,7 @@ class MainFragment() : Fragment(), MenuProvider {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentMainBinding.inflate(inflater)
-
-        return binding.root
+        return binding?.root
     }
 
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
@@ -69,6 +70,10 @@ class MainFragment() : Fragment(), MenuProvider {
         menu.setGroupVisible(R.id.authorization, authViewModel.authorized)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        binding = null
+    }
     override fun onMenuItemSelected(menuItem: MenuItem): Boolean =
         when (menuItem.itemId) {
             R.id.login -> {
@@ -100,10 +105,15 @@ class MainFragment() : Fragment(), MenuProvider {
 
     private fun init() {
         val adapter = ViewPagerAdapter(activity as FragmentActivity, fragmentList)
-        binding.vp.adapter = adapter
-        TabLayoutMediator(binding.mainLayout, binding.vp) { tab, pos ->
-            tab.text = tabList[pos]
-        }.attach()
+
+        binding?.vp?.adapter = adapter
+        val vp = binding?.vp
+        val mainLayout = binding?.mainLayout
+        if (mainLayout != null &&  vp != null) {
+            TabLayoutMediator(mainLayout, vp) { tab, pos ->
+                tab.text = tabList[pos]
+            }.attach()
+        }
     }
 
 }

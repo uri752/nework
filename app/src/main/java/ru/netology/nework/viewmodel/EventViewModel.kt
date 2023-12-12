@@ -46,7 +46,7 @@ class EventViewModel @Inject constructor(
     val state: LiveData<EventModelState>
         get() = _state
 
-    val edited = MutableLiveData(empty)
+    private val edited = MutableLiveData(empty)
 
     val data: Flow<PagingData<Event>> = appAuth
         .authStateFlow

@@ -1,13 +1,12 @@
 package ru.netology.nework.activity.wall
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.SeekBar
 import androidx.core.view.isVisible
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
@@ -26,25 +25,22 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
-class WallFragment() : Fragment() {
+class WallFragment : Fragment() {
 
     @Inject
     lateinit var appAuth: AppAuth
-    private lateinit var binding: FragmentWallBinding
-    private lateinit var adapter: WallAdapter
     private var playTrack = -1L
-    private val viewModelPost: PostViewModel by activityViewModels()
-    private val authViewModel: AuthViewModel by activityViewModels()
-    private val wallViewModel: WallViewModel by activityViewModels()
+    private val viewModelPost: PostViewModel by viewModels()
+    private val authViewModel: AuthViewModel by viewModels()
+    private val wallViewModel: WallViewModel by viewModels()
 
-    @SuppressLint("NotifyDataSetChanged")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
 
-        binding = FragmentWallBinding.inflate(inflater, container, false)
-        adapter = WallAdapter(object : OnClick<Wall> {
+        val binding = FragmentWallBinding.inflate(inflater, container, false)
+        val adapter = WallAdapter(object : OnClick<Wall> {
 
 
             override fun onRemove(wall: Wall) {
@@ -85,7 +81,7 @@ class WallFragment() : Fragment() {
             override fun onPlayVideo(wall: Wall) {
             }
 
-            override fun onClik(data: Wall) {
+            override fun onClick(data: Wall) {
 
             }
 
@@ -139,7 +135,7 @@ class WallFragment() : Fragment() {
         }
 
         authViewModel.data.observe(viewLifecycleOwner) {
-            adapter.notifyDataSetChanged()
+
         }
 
         wallViewModel.state.observe(viewLifecycleOwner) { state ->

@@ -14,7 +14,7 @@ import androidx.core.view.MenuProvider
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import com.github.dhaval2404.imagepicker.ImagePicker
@@ -32,15 +32,19 @@ import java.io.File
 
 @AndroidEntryPoint
 @OptIn(ExperimentalCoroutinesApi::class)
-class NewPostFragment() : Fragment(), MenuProvider {
+class NewPostFragment : Fragment(), MenuProvider {
 
-    private lateinit var binding: FragmentNewPostBinding
+    private var binding: FragmentNewPostBinding? = null
     private val fileUtils = FileFromContentUri()
     private val pickAudioLauncher = pickMediaLauncher(TypeAttachment.AUDIO)
     private val pickPhotoLauncher = pickMediaLauncher(TypeAttachment.IMAGE)
     private val pickVideoLauncher = pickMediaLauncher(TypeAttachment.VIDEO)
-    private val viewModelPost: PostViewModel by activityViewModels()
+    private val viewModelPost: PostViewModel by viewModels()
 
+    override fun onDestroy() {
+        super.onDestroy()
+        binding = null
+    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val menuHost: MenuHost = requireActivity()
         menuHost.addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
@@ -50,7 +54,7 @@ class NewPostFragment() : Fragment(), MenuProvider {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentNewPostBinding.inflate(inflater, container, false)
+        val binding = FragmentNewPostBinding.inflate(inflater, container, false)
 
         binding.clear.setOnClickListener {
             viewModelPost.clearMedia()
@@ -114,7 +118,7 @@ class NewPostFragment() : Fragment(), MenuProvider {
     override fun onMenuItemSelected(menuItem: MenuItem): Boolean =
         when (menuItem.itemId) {
             R.id.save -> {
-                val text = binding.edit.text.toString()
+                val text = binding?.edit?.text.toString()
                 if (text.isNotBlank()) {
                     this@NewPostFragment.viewModelPost.savePost(text)
                 }
@@ -171,7 +175,7 @@ class NewPostFragment() : Fragment(), MenuProvider {
             when (it.resultCode) {
                 ImagePicker.RESULT_ERROR -> {
                     Snackbar.make(
-                        binding.root,
+                        binding?.root!!,
                         ImagePicker.getError(it.data),
                         Snackbar.LENGTH_LONG
                     ).show()
@@ -194,7 +198,7 @@ class NewPostFragment() : Fragment(), MenuProvider {
                 }
                 Activity.RESULT_CANCELED -> {
                     Snackbar.make(
-                        binding.root,
+                        binding?.root!!,
                         getString(R.string.contracts_is_canceled),
                         Snackbar.LENGTH_LONG
                     ).show()

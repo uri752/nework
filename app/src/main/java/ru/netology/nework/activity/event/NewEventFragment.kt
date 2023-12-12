@@ -14,7 +14,7 @@ import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import com.github.dhaval2404.imagepicker.ImagePicker
@@ -32,13 +32,14 @@ import java.io.File
 
 @AndroidEntryPoint
 @OptIn(ExperimentalCoroutinesApi::class)
-class NewEventFragment() : Fragment(), MenuProvider {
-    private lateinit var binding: FragmentNewEventBinding
+class NewEventFragment : Fragment(), MenuProvider {
     private val fileUtils = FileFromContentUri()
     private val pickAudioLauncher = pickMediaLauncher(TypeAttachment.AUDIO)
     private val pickPhotoLauncher = pickMediaLauncher(TypeAttachment.IMAGE)
     private val pickVideoLauncher = pickMediaLauncher(TypeAttachment.VIDEO)
-    private val viewModelEvent: EventViewModel by activityViewModels()
+    private val viewModelEvent: EventViewModel by viewModels()
+
+    private var binding: FragmentNewEventBinding? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val menuHost: MenuHost = requireActivity()
@@ -49,9 +50,9 @@ class NewEventFragment() : Fragment(), MenuProvider {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentNewEventBinding.inflate(inflater, container, false)
+        val binding = FragmentNewEventBinding.inflate(inflater, container, false)
 
-        binding.clear.setOnClickListener {
+        binding?.clear?.setOnClickListener {
             viewModelEvent.clearMedia()
         }
 
@@ -110,10 +111,15 @@ class NewEventFragment() : Fragment(), MenuProvider {
         menuInflater.inflate(R.menu.menu_new_post, menu)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        binding = null
+    }
+
     override fun onMenuItemSelected(menuItem: MenuItem): Boolean =
         when (menuItem.itemId) {
             R.id.save -> {
-                val text = binding.edit.text.toString()
+                val text = binding?.edit?.text.toString()
                 if (text.isNotBlank()) {
                     this@NewEventFragment.viewModelEvent.saveEvent(text)
                 }
@@ -170,7 +176,7 @@ class NewEventFragment() : Fragment(), MenuProvider {
             when (it.resultCode) {
                 ImagePicker.RESULT_ERROR -> {
                     Snackbar.make(
-                        binding.root,
+                        binding!!.root,
                         ImagePicker.getError(it.data),
                         Snackbar.LENGTH_LONG
                     ).show()
@@ -193,7 +199,7 @@ class NewEventFragment() : Fragment(), MenuProvider {
                 }
                 Activity.RESULT_CANCELED -> {
                     Snackbar.make(
-                        binding.root,
+                        binding!!.root,
                         getString(R.string.contracts_is_canceled),
                         Snackbar.LENGTH_LONG
                     ).show()

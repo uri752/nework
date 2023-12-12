@@ -10,13 +10,12 @@ import com.bumptech.glide.Glide
 import ru.netology.nework.activity.MainFragment.Companion.textArg
 import ru.netology.nework.databinding.FragmentImageBinding
 
-class ImageFragment() : Fragment() {
-    private lateinit var binding: FragmentImageBinding
+class ImageFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentImageBinding.inflate(inflater, container, false)
+        val binding = FragmentImageBinding.inflate(inflater, container, false)
 
         arguments?.textArg?.let {
             val uri: Uri = Uri.parse(it)

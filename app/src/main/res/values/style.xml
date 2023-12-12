@@ -16,8 +16,6 @@
         <item name="android:minHeight">@dimen/icon_button_min_size</item>
     </style>
 
-    <style name="Widget.MyApp.Chip.Choice" parent="Widget.MaterialComponents.Chip.Choice"></style>
-
     <style name="Widget.AppTheme.IconButton" parent="Widget.MaterialComponents.Button.TextButton.Icon">
         <item name="iconTint">@color/icon_button_tint</item>
         <item name="iconPadding">0dp</item>

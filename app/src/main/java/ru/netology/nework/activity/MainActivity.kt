@@ -10,9 +10,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import ru.netology.nework.R
 
 @AndroidEntryPoint
-class MainActivity() : AppCompatActivity() {
-
-    lateinit var appBarConfiquration: AppBarConfiguration
+class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,7 +18,7 @@ class MainActivity() : AppCompatActivity() {
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
         val navController = navHostFragment.navController
-        appBarConfiquration = AppBarConfiguration(navController.graph)
+        val appBarConfiquration = AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController, appBarConfiquration)
     }
 

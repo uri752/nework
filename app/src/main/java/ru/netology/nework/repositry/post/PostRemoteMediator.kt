@@ -25,7 +25,7 @@ class PostRemoteMediator(
         state: PagingState<Int, PostEntity>
     ): MediatorResult {
         try {
-            val responce = when (loadType) {
+            val response = when (loadType) {
                 LoadType.REFRESH -> {
                     val id = postRemoteKeyDao.max() ?: return MediatorResult.Success(false)
                     if (id == 0L) {
@@ -43,17 +43,22 @@ class PostRemoteMediator(
                 }
             }
 
-            if (!responce.isSuccessful) {
-                throw HttpException(responce)
+            if (!response.isSuccessful) {
+                throw HttpException(response)
             }
-            val body = responce.body() ?: throw ApiError(
-                responce.code(),
-                responce.message()
+
+            val body = response.body() ?: throw ApiError(
+                response.code(),
+                response.message()
             )
+
+            if (body.isEmpty()) {
+                return MediatorResult.Success(false)
+            }
+
             appDb.withTransaction {
                 when (loadType) {
                     LoadType.REFRESH -> {
-                        // postDao.insert(body.map(PostEntity::fromDto))
                         postRemoteKeyDao.insert(
                             listOf(
                                 PostRemoteKeyEntity(

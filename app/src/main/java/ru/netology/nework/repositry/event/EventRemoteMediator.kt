@@ -30,8 +30,7 @@ class EventRemoteMediator(
         try {
             val response = when (loadType) {
                 LoadType.REFRESH -> {
-               //    val id = eventRemoteKeyDao.max() ?: return RemoteMediator.MediatorResult.Success(true)
-                        apiService.getLatestEvent(state.config.pageSize)
+                    apiService.getLatestEvent(state.config.pageSize)
                 }
                 LoadType.PREPEND -> {
                     return RemoteMediator.MediatorResult.Success(true)
@@ -49,6 +48,11 @@ class EventRemoteMediator(
                 response.code(),
                 response.message()
             )
+
+            if (eventBody.isEmpty()) {
+                return MediatorResult.Success(false)
+            }
+
             appDb.withTransaction {
                 when (loadType) {
                     LoadType.REFRESH -> {

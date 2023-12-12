@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.isVisible
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -18,18 +18,15 @@ import ru.netology.nework.viewmodel.AuthViewModel
 import ru.netology.nework.viewmodel.PostViewModel
 
 @AndroidEntryPoint
-class LoginFragment() : Fragment() {
-
-    lateinit var binding: FragmentLoginBinding
-
-    private val viewModelPost: PostViewModel by activityViewModels()
-    private val authViewModel: AuthViewModel by activityViewModels()
+class LoginFragment : Fragment() {
+    private val viewModelPost: PostViewModel by viewModels()
+    private val authViewModel: AuthViewModel by viewModels()
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentLoginBinding.inflate(inflater, container, false)
+        val binding = FragmentLoginBinding.inflate(inflater, container, false)
         binding.buttonLogin.setOnClickListener {
             val login = binding.login.text.toString()
             if (!login.isNullOrBlank()) {
@@ -37,21 +34,20 @@ class LoginFragment() : Fragment() {
                 AndroidUtils.hideKeyboard(requireView())
                 binding.buttonLogin.let { button ->
                     button.isClickable = false
-                    button.text = getString(R.string.Wait_authorization)
+                    button.text = getString(R.string.wait_authorization)
                 }
                 binding.loading.isVisible = true
                 binding.login.isEnabled = false
                 binding.password.isEnabled = false
                 authViewModel.authorization(login, pass)
             } else {
-                Toast.makeText(context, R.string.Login_is_Null, Toast.LENGTH_LONG).show()
+                Toast.makeText(context, R.string.login_is_null, Toast.LENGTH_LONG).show()
             }
         }
 
         authViewModel.data.observe(viewLifecycleOwner) {
             if (authViewModel.authorized) {
-             //   viewModelPost.loadPosts()
-                findNavController().navigateUp()   //navigate(R.id.fragment_main)
+                findNavController().navigateUp()
             }
         }
 
@@ -66,7 +62,7 @@ class LoginFragment() : Fragment() {
                     login.setText("")
                     password.setText("")
                 }
-                Toast.makeText(context, R.string.Login_not_found, Toast.LENGTH_LONG).show()
+                Toast.makeText(context, R.string.login_not_found, Toast.LENGTH_LONG).show()
             }
         }
         return binding.root

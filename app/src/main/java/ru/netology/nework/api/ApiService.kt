@@ -8,7 +8,6 @@ import ru.netology.nework.dto.*
 import ru.netology.nework.model.AuthModel
 
 interface ApiService {
-    // Event
     @GET("/api/events/")
     suspend fun getAllEvents(): Response<List<Event>>
 
@@ -19,44 +18,42 @@ interface ApiService {
     suspend fun getLatestEvent(@Query("count") count: Int): Response<List<Event>>
 
     @GET("/api/events/{event_id}/")
-    suspend fun getEventById(@Path("event_id") event_id: Long): Response<Event>
+    suspend fun getEventById(@Path("event_id") eventId: Long): Response<Event>
 
     @DELETE("/api/events/{event_id}/")
-    suspend fun deleteEventById(@Path("event_id") event_id: Long): Response<Unit>
+    suspend fun deleteEventById(@Path("event_id") eventId: Long): Response<Unit>
 
     @GET("/api/events/{event_id}/after/")
     suspend fun getEventAfter(
-        @Path("event_id") event_id: Long,
+        @Path("event_id") eventId: Long,
         @Query("count") count: Int
     ): Response<List<Event>>
 
     @GET("/api/events/{event_id}/after/")
     suspend fun getEventBefore(
-        @Path("event_id") event_id: Long,
+        @Path("event_id") eventId: Long,
         @Query("count") count: Int
     ): Response<List<Event>>
 
     @POST("/api/events/{event_id}/likes/")
-    suspend fun likeEventById(@Path("event_id") event_id: Long): Response<Event>
+    suspend fun likeEventById(@Path("event_id") eventId: Long): Response<Event>
 
     @DELETE("/api/events/{event_id}/likes/")
-    suspend fun unlikeEventById(@Path("event_id") event_id: Long): Response<Event>
+    suspend fun unlikeEventById(@Path("event_id") eventId: Long): Response<Event>
 
     @GET("/api/events/{event_id}/newer/")
-    suspend fun getEventNewer(@Path("event_id") event_id: Long): Response<List<Event>>
+    suspend fun getEventNewer(@Path("event_id") eventId: Long): Response<List<Event>>
 
     @POST("/api/events/{event_id}/participants/")
-    suspend fun addParticipants(@Path("event_id") event_id: Long): Response<List<Event>>
+    suspend fun addParticipants(@Path("event_id") eventId: Long): Response<List<Event>>
 
     @DELETE("/api/events/{event_id}/participants/")
-    suspend fun deleteParticipants(@Path("event_id") event_id: Long): Response<List<Event>>
+    suspend fun deleteParticipants(@Path("event_id") eventId: Long): Response<List<Event>>
 
-    //Media
     @Multipart
     @POST("/api/media/")
     suspend fun uploadMedia(@Part media: MultipartBody.Part): Response<Media>
 
-    //Jobs
     @GET("/api/my/jobs/")
     suspend fun getMyJobs(): Response<List<Job>>
 
@@ -64,12 +61,11 @@ interface ApiService {
     suspend fun saveMyJob(@Body job: Job): Response<Job>
 
     @DELETE("/api/my/jobs/{job_id}/")
-    suspend fun deleteMyJob(@Path("job_id") job_id: Long): Response<Unit>
+    suspend fun deleteMyJob(@Path("job_id") jobId: Long): Response<Unit>
 
     @GET("/api/{user_id}/jobs/")
-    suspend fun getUserJob(@Path("user_id") user_id: Long): Response<List<Job>>
+    suspend fun getUserJob(@Path("user_id") userId: Long): Response<List<Job>>
 
-    //MyWall
     @GET("/api/my/wall/")
     suspend fun getMyWall(): Response<List<Wall>>
 
@@ -78,18 +74,18 @@ interface ApiService {
 
     @GET("/api/my/wall/{post_id}/after/")
     suspend fun getAfterWall(
-        @Path("post_id") post_id: Long,
+        @Path("post_id") postId: Long,
         @Query("count") count: Int
     ): Response<List<Post>>
 
     @GET("/api/my/wall/{post_id}/before/")
     suspend fun getBeforeWall(
-        @Path("post_id") post_id: Long,
+        @Path("post_id") postId: Long,
         @Query("count") count: Int
     ): Response<List<Post>>
 
     @GET("/api/my/wall/{post_id}/newer/")
-    suspend fun getNewerWall(@Path("post_id") post_id: Long): Response<List<Post>>
+    suspend fun getNewerWall(@Path("post_id") postId: Long): Response<List<Post>>
 
     //Posts
     @GET("/api/posts/")
@@ -102,38 +98,37 @@ interface ApiService {
     suspend fun getLatestPosts(@Query("count") count: Int): Response<List<Post>>
 
     @GET("/api/posts/{post_id}/")
-    suspend fun getPostById(@Path("post_id") post_id: Long): Response<Post>
+    suspend fun getPostById(@Path("post_id") postId: Long): Response<Post>
 
     @DELETE("/api/posts/{post_id}/")
-    suspend fun deletePostById(@Path("post_id") post_id: Long): Response<Unit>
+    suspend fun deletePostById(@Path("post_id") postId: Long): Response<Unit>
 
     @GET("/api/posts/{post_id}/after/")
     suspend fun getAfterPosts(
-        @Path("post_id") post_id: Long,
+        @Path("post_id") postId: Long,
         @Query("count") count: Int
     ): Response<List<Post>>
 
     @GET("/api/posts/{post_id}/before/")
     suspend fun getBeforePosts(
-        @Path("post_id") post_id: Long,
+        @Path("post_id") postId: Long,
         @Query("count") count: Int
     ): Response<List<Post>>
 
     @GET("/api/posts/{post_id}/newer/")
-    suspend fun getNewerPosts(@Path("post_id") post_id: Long): Response<List<Post>>
+    suspend fun getNewerPosts(@Path("post_id") postId: Long): Response<List<Post>>
 
     @POST("/api/posts/{post_id}/likes/")
-    suspend fun likePostById(@Path("post_id") post_id: Long): Response<Post>
+    suspend fun likePostById(@Path("post_id") postId: Long): Response<Post>
 
     @DELETE("/api/posts/{post_id}/likes/")
-    suspend fun unlikePostById(@Path("post_id") post_id: Long): Response<Post>
+    suspend fun unlikePostById(@Path("post_id") postId: Long): Response<Post>
 
-    //Users
     @GET("/api/users/")
     suspend fun getUsers(): Response<List<User>>
 
     @GET("/api/users/{user_id}/")
-    suspend fun getUserById(@Path("user_id") user_id: Long): Response<User>
+    suspend fun getUserById(@Path("user_id") userId: Long): Response<User>
 
     @FormUrlEncoded
     @POST("/api/users/authentication/")
@@ -159,33 +154,32 @@ interface ApiService {
         @Part media: MultipartBody.Part,
     ): Response<AuthModel>
 
-    // Wall
     @GET("/api/{author_id}/wall/")
-    suspend fun getWallById(@Path("author_id") author_id: Long): Response<List<Wall>>
+    suspend fun getWallById(@Path("author_id") authorId: Long): Response<List<Wall>>
 
     @GET("/api/{author_id}/wall/latest/")
     suspend fun getLatestWallById(
-        @Path("author_id") author_id: Long,
+        @Path("author_id") authorId: Long,
         @Query("count") count: Int
     ): Response<List<Post>>
 
     @GET("/api/{author_id}/wall/{post_id}}/after/")
     suspend fun getAfterWallById(
-        @Path("author_id") author_id: Long,
-        @Path("post_id") post_id: Long,
+        @Path("author_id") authorId: Long,
+        @Path("post_id") postId: Long,
         @Query("count") count: Int
     ): Response<List<Post>>
 
     @GET("/api/{author_id}/wall/{post_id}}/before/")
     suspend fun getBeforeWallById(
-        @Path("author_id") author_id: Long,
-        @Path("post_id") post_id: Long,
+        @Path("author_id") authorId: Long,
+        @Path("post_id") postId: Long,
         @Query("count") count: Int
     ): Response<List<Post>>
 
     @GET("/api/{author_id}/wall/{post_id}}/newer/")
     suspend fun getNewerWallById(
-        @Path("author_id") author_id: Long,
-        @Path("post_id") post_id: Long
+        @Path("author_id") authorId: Long,
+        @Path("post_id") postId: Long
     ): Response<List<Post>>
 }
